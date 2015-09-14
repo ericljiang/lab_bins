@@ -6,6 +6,8 @@ import java.util.List;
  */
 public class Disk implements Comparable<Disk> {
     public static final int MAX_CAPACITY = 1000000;
+    private static int ourId = 0;
+
     private int myId;
     private int mySize;
     private int myCapacity;
@@ -15,7 +17,8 @@ public class Disk implements Comparable<Disk> {
      * Create an empty Disk.
      */
     public Disk () {
-        this(0);
+        this(ourId);
+        ourId++;
     }
 
     /**
@@ -26,6 +29,13 @@ public class Disk implements Comparable<Disk> {
         mySize = 0;
         myCapacity = MAX_CAPACITY;
         myFiles = new ArrayList<Integer>();
+    }
+
+    /**
+     * @return true iff the given disk size fits on this disk
+     */
+    public boolean canFit (int size) {
+        return freeSpace() >= size;
     }
 
     /**
