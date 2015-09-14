@@ -1,8 +1,5 @@
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Scanner;
 
 
@@ -11,8 +8,12 @@ import java.util.Scanner;
  */
 public class Bins {
     public static final String DATA_FILE = "example.txt";
-    public static final String WORST_FIT = "worst-fit";
-    public static final String WORST_FIT_DECREASING = "worst-fit decreasing";
+    // all possible algorithms to compare --- add new instances here!
+    private static WorstFitAlgorithm algortihmsToCompare[] = { 
+        new WorstFitAlgorithm(),
+        new WorstFitDecreasingAlgorithm()
+    };
+
 
     /**
      * Reads list of integer data from the given input.
@@ -39,47 +40,6 @@ public class Bins {
         return total;
     }
 
-    // add files to the collection of Disks
-    private Collection<Disk> addFiles (List<Integer> data) {
-        PriorityQueue<Disk> pq = new PriorityQueue<>();
-        pq.add(new Disk(0));
-        int diskId = 1;
-        for (Integer size : data) {
-            Disk d = pq.peek();
-            if (d.freeSpace() >= size) {
-                pq.poll();
-                d.add(size);
-                pq.add(d);
-            }
-            else {
-                Disk d2 = new Disk(diskId);
-                diskId++;
-                d2.add(size);
-                pq.add(d2);
-            }
-        }
-        return pq;
-    }
-
-    // print contents of given pq and a header, description
-    private void printResults (Collection<Disk> disks, String description) {
-        System.out.println();
-        System.out.println("\n" + description + " method");
-        System.out.println("number of disks used: " + disks.size());
-        for (Disk d : disks) {
-            System.out.println(d);
-        }
-    }
-
-    // add contents of given data to pq and print results
-    private void runAlgorithm (List<Integer> data, String description) {
-        List<Integer> copy = new ArrayList<>(data);
-        if (description.equals(WORST_FIT_DECREASING)) {
-            Collections.sort(copy, Collections.reverseOrder());
-        }
-        Collection<Disk> disks = addFiles(copy);
-        printResults(disks, description);
-    }
 
     /**
      * The main program.
@@ -90,7 +50,8 @@ public class Bins {
         List<Integer> data = b.readData(input);
         System.out.println("total size = " + b.getTotal(data) / 1000000.0 + "GB");
 
-        b.runAlgorithm(data, WORST_FIT);
-        b.runAlgorithm(data, WORST_FIT_DECREASING);
+        for (WorstFitAlgorithm al : algortihmsToCompare) {
+            al.fitDisksAndPrint(data);
+        }
     }
 }
