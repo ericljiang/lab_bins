@@ -1,7 +1,9 @@
+import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.function.UnaryOperator;
 
 /**
  * This class represents worst-fit algorithms for allocating files to disks.
@@ -31,7 +33,7 @@ public class WorstFitAlgorithm {
      *
      * @param data collection of files to be allocated to disks
      */
-    public void fitDisksAndPrint (List<Integer> data) {
+    public void fitDisksAndPrint (List<Integer> data, UnaryOperator<List> op) {
         List<Integer> copy = new ArrayList<>(data);
         organizeData(copy);
         Collection<Disk> disks = addFiles(copy);

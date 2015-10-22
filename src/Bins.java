@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.UnaryOperator;
 
 
 /**
@@ -13,6 +15,10 @@ public class Bins {
         new WorstFitAlgorithm(),
         new WorstFitDecreasingAlgorithm()
     };
+    
+    interface ListTransformation {
+    	List transform(List l);
+    }
 
 
     /**
@@ -39,6 +45,11 @@ public class Bins {
         }
         return total;
     }
+    
+    public List<Integer> sort(List<Integer> l) {
+    	Collections.sort(l, Collections.reverseOrder());
+    	return l;
+    }
 
 
     /**
@@ -50,8 +61,12 @@ public class Bins {
         List<Integer> data = b.readData(input);
         System.out.println("total size = " + b.getTotal(data) / 1000000.0 + "GB");
 
-        for (WorstFitAlgorithm al : algortihmsToCompare) {
+        /*for (WorstFitAlgorithm al : algortihmsToCompare) {
             al.fitDisksAndPrint(data);
+        }*/
+        UnaryOperator ops[] = {e -> e, e -> b.sort(data)};
+        for (UnaryOperator op : ops) {
+        	new WorstFitAlgorithm().fitDisksAndPrint(data, op);
         }
     }
 }
